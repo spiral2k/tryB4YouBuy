@@ -2,6 +2,8 @@ import { Context, Markup, Composer, Telegraf } from "telegraf";
 import { Update } from "typegram";
 import channels from "./channels";
 
+require("dotenv").config();
+
 const bot: Telegraf<Context<Update>> = new Telegraf(
   process.env.BOT_TOKEN as string
 );

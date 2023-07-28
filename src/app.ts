@@ -1,22 +1,14 @@
 import { Context, Markup, Telegraf } from "telegraf";
 import { Update } from "typegram";
-import channels from "./channels";
 import { createInviteLink } from "./api";
 import logger from "./logger";
+import { getChannels } from "./utils";
 
 require("dotenv").config();
 
 const bot: Telegraf<Context<Update>> = new Telegraf(
   process.env.BOT_TOKEN as string
 );
-
-const getOptions = () => {
-  return Object.keys(channels).map((channel) => {
-    const channelf = (channels as any)[channel];
-
-    return Markup.button.callback(channelf.name, channelf.alias);
-  });
-};
 
 bot.use(async (ctx, next) => {
   const update = ctx.update as any;
@@ -33,7 +25,7 @@ bot.use(async (ctx, next) => {
 bot.start((ctx) => {
   ctx.reply("ברוך הבא לבוט הכי נדיר בטלגרם " + ctx.from.first_name + "!");
 
-  ctx.reply("אהלן וסהלן", Markup.inlineKeyboard(getOptions()));
+  ctx.reply("אהלן וסהלן", Markup.inlineKeyboard(getChannels()));
 });
 
 bot.action("samples", (ctx) => {

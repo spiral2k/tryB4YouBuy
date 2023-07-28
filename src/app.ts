@@ -1,6 +1,8 @@
-import { Context, Markup, Composer, Telegraf } from "telegraf";
+import { Context, Markup, Telegraf } from "telegraf";
 import { Update } from "typegram";
 import channels from "./channels";
+import { createInviteLink } from "./api";
+import logger from "./logger";
 
 require("dotenv").config();
 
@@ -16,6 +18,12 @@ const getOptions = () => {
   });
 };
 
+bot.use(async (ctx, next) => {
+  const user = (ctx.update as any).callback_query.from;
+  logger.info(JSON.stringify(user));
+  await next();
+});
+
 bot.start((ctx) => {
   ctx.reply("ברוך הבא לבוט הכי נדיר בטלגרם " + ctx.from.first_name + "!");
 
@@ -23,20 +31,26 @@ bot.start((ctx) => {
 });
 
 bot.action("samples", (ctx) => {
-  ctx.telegram.getChat("@tryb4youbuy_samples").then((res) => {
-    ctx.reply((res as any).invite_link);
+  ctx.telegram.getChat("@tryb4youbuy_samples").then(async () => {
+    const invite = await createInviteLink("@tryb4youbuy_samples", ctx);
+
+    ctx.reply(invite.invite_link);
   });
 });
 
 bot.action("vst", (ctx) => {
-  ctx.telegram.getChat("@tryb4youbuy_vst").then((res) => {
-    ctx.reply((res as any).invite_link);
+  ctx.telegram.getChat("@tryb4youbuy_vst").then(async () => {
+    const invite = await createInviteLink("@tryb4youbuy_vst", ctx);
+
+    ctx.reply(invite.invite_link);
   });
 });
 
 bot.action("production", (ctx) => {
-  ctx.telegram.getChat("@tryb4youbuy_production").then((res) => {
-    ctx.reply((res as any).invite_link);
+  ctx.telegram.getChat("@tryb4youbuy_production").then(async () => {
+    const invite = await createInviteLink("@tryb4youbuy_production", ctx);
+
+    ctx.reply(invite.invite_link);
   });
 });
 

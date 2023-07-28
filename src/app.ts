@@ -19,10 +19,8 @@ const getOptions = () => {
 };
 
 bot.use(async (ctx, next) => {
-  const user =
-    (ctx.update as any).callback_query?.from ||
-    (ctx.update as any).message?.from ||
-    JSON.stringify(ctx);
+  const update = ctx.update as any;
+  const user = update.callback_query?.from || update.message?.from;
 
   if (user) {
     logger.info(JSON.stringify(user));

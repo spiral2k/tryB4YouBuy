@@ -19,8 +19,16 @@ const getOptions = () => {
 };
 
 bot.use(async (ctx, next) => {
-  const user = (ctx.update as any).callback_query.from;
-  logger.info(JSON.stringify(user));
+  const user =
+    (ctx.update as any).callback_query?.from ||
+    (ctx.update as any).message?.from ||
+    JSON.stringify(ctx);
+
+  if (user) {
+    logger.info(JSON.stringify(user));
+  } else {
+    logger.info("NO USER FOUND: " + JSON.stringify(ctx));
+  }
   await next();
 });
 
